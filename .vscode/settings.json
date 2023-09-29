@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\miwem\\Desktop\\Java Libraries\\jna-5.13.0.jar"
+    ]
+}
