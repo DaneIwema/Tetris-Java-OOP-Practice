@@ -1,62 +1,70 @@
 package Tetris;
 
-import java.util.Random;
-
 public class Container {
     private Tetrominoe [][] display;
-    Random rand = new Random();
-    int bufferWidth;
-    int bufferHeight;
-    Tetrominoe currPiece;
 
-    public Container(int width, int height) {
-        bufferWidth = (width/2)-6;
-        bufferHeight = (height/2)-11;
-        StringBuilder str = new StringBuilder();
-        display = new Tetrominoe[12][26];
-        for (int i = 0; i < 22; i++){
+    public Container() {
+        display = new Tetrominoe[24][12];
+        for (int i = 0; i < 24; i++){
             for (int j = 0; j < 12; j++){
-                if (j == 0 || j == 11){
-                    //sides
-                    str.append("\033[48;2;129;131;131m \033[0m");
-                }
-                else if (i == 21 ){
-                    //bottom row
-                    str.append("\033[48;2;129;131;131m-\033[0m");
-                }
-                else{
-                    //middle
-                    str.append("\033[48;2;203;204;205m \033[0m");
-                }
+                if (j == 0|| j == 11)
+                    display[i][j] = new outSidePiece();
+                else if (i == 23)
+                    display[i][j] = new outSidePiece();
+                else
+                    display[i][j] = new fillerPiece();
+            }
+        }
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        for (int i = 2; i < 24; i++){
+            for (int j = 0; j < 12; j++){
+                str.append(display[i][j].getColor());
             }
             str.append("\n");
         }
-        System.out.print(str);
+        return str.toString();
     }
 
-    public void addPiece() {
-        switch(rand.nextInt(6)){
-            case 0:
-                currPiece = new TPiece();
-                break;
-            case 1:
-                currPiece = new IPiece();
-                break;
-            case 2:
-                currPiece = new LPiece();
-                break;
-            case 3:
-                currPiece = new JPiece();
-                break;
-            case 4:
-                currPiece = new ZPiece();
-                break;
-            case 5:
-                currPiece = new SPiece();
-                break;
-            case 6:
-                currPiece = new CubePiece();
-                break;
+    public void upDatePiece(Tetrominoe piece){
+        for (int i = 0; i < 4; i++){
+            switch(piece.getRotation()[i]){
+                case 1:
+                    display[piece.getY()-1][piece.getX()-1] = piece;
+                    break;
+                case 2:
+                    display[piece.getY()-1][piece.getX()] = piece;
+                    break;
+                case 3:
+                    display[piece.getY()-1][piece.getX()+1] = piece;
+                    break;
+                case 4:
+                    display[piece.getY()][piece.getX()-1] = piece;
+                    break;
+                case 5:
+                    display[piece.getY()][piece.getX()] = piece;
+                    break;
+                case 6:
+                    display[piece.getY()][piece.getX()+1] = piece;
+                    break;
+                case 7:
+                    display[piece.getY()][piece.getX()-2] = piece;
+                    break;
+                case 8:
+                    display[piece.getY()-1][piece.getX()-1] = piece;
+                    break;
+                case 9:
+                    display[piece.getY()-1][piece.getX()] = piece;
+                    break;
+                case 10:
+                    display[piece.getY()-1][piece.getX()+1] = piece;
+                    break;
+                case 11:
+                    display[piece.getY()-2][piece.getX()] = piece;
+                    break;
+            }
         }
     }
 }
