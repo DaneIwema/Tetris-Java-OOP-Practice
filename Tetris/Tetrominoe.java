@@ -39,14 +39,6 @@ public class Tetrominoe {
         return pieceData[1];
     }
 
-    public void setX(int xVal){
-        pieceData[0] = xVal;
-    }
-
-    public void setY(int yVal){
-        pieceData[1] = yVal;
-    }
-
     public void rotate(){
         int column = (pieceData[0]*(int)Math.cos(90))-(pieceData[1]*(int)Math.sin(90));
         int row = (pieceData[0]*(int)Math.sin(90))-(pieceData[1]*(int)Math.cos(90));
