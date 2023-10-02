@@ -40,8 +40,8 @@ public class Tetrominoe {
     }
 
     public void rotate(){
-        int column = (pieceData[0]*(int)Math.cos(90))-(pieceData[1]*(int)Math.sin(90));
-        int row = (pieceData[0]*(int)Math.sin(90))-(pieceData[1]*(int)Math.cos(90));
+        int column = (pieceData[0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[1]*(int)Math.sin(Math.toRadians(90)));
+        int row = (pieceData[0]*(int)Math.sin(Math.toRadians(90)))-(pieceData[1]*(int)Math.cos(Math.toRadians(90)));
         pieceData[0] = column;
         pieceData[1] = row;
     }

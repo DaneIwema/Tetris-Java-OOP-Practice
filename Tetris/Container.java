@@ -20,18 +20,14 @@ public class Container {
     public Container() {
         head = new Node(null);
         Node curP = head;
-        for (int i = 1; i < 25; i++){
+        for (int i = 1; i < 24; i++){
             curP.next = new Node(null);
             curP = curP.next;
         }
         currPiece = new Piece();
         prevPiece = currPiece;
         currRow = head;
-        placePiece(head);
-    }
-
-    public void updateDisplay(){
-
+        placePiece(head, currPiece.getOrder());
     }
     
     private void clearDisplay(Node pos){
@@ -43,37 +39,37 @@ public class Container {
         }
     }
 
-    private void placePiece(Node pos){
-        pos.row[currPiece.getX() + currPiece.getTetrominoe(0).getX()] = currPiece.getTetrominoe(0);
+    private void placePiece(Node pos, int [] order){
+        pos.row[currPiece.getX() + currPiece.getTetrominoe(order[0]).getX()] = currPiece.getTetrominoe(0);
         for (int i = 1; i < 4; i++){
-            if(currPiece.getTetrominoe(i).getY() > currPiece.getTetrominoe(i - 1).getY())
+            if(currPiece.getTetrominoe(order[i]).getY() > currPiece.getTetrominoe(order[i] - 1).getY())
                 pos = pos.next;
-            pos.row[currPiece.getX() + currPiece.getTetrominoe(i).getX()] = currPiece.getTetrominoe(i);
+            pos.row[currPiece.getX() + currPiece.getTetrominoe(order[i]).getX()] = currPiece.getTetrominoe(i);
         }
     }
 
     public void moveRight(){
         clearDisplay(currRow);
         currPiece.moveRight();
-        placePiece(currRow);
+        placePiece(currRow, currPiece.getOrder());
     }
 
     public void moveLeft(){
         clearDisplay(currRow);
         currPiece.moveLeft();
-        placePiece(currRow);
+        placePiece(currRow, currPiece.getOrder());
     }
 
     public void drop(){
         clearDisplay(currRow);
         currRow = currRow.next;
-        placePiece(currRow);
+        placePiece(currRow, currPiece.getOrder());
     }
 
     public void rotate(){
         clearDisplay(currRow);
         currPiece.rotate();
-        placePiece(currRow);
+        placePiece(currRow, currPiece.reOrder());
     }
 
     public String toString(){

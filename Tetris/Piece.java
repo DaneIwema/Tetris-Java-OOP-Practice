@@ -5,11 +5,13 @@ import java.util.Random;
 class Piece {
 
     private Tetrominoe [] pieces;
+    private int [] order;
     int column;
     
     public Piece() {
         pieces = newPiece();
         column = 5;
+        order = new int[] {0, 1, 2, 3};
     }
 
     public int getX(){
@@ -35,6 +37,23 @@ class Piece {
     public void rotate(){
         for (int i = 0; i < 4; i++)
         pieces[i].rotate();
+    }
+
+    public int [] getOrder(){
+        return order;
+    }
+
+    public int [] reOrder(){
+        int [] newOrder = new int [4]; 
+        for (int i = 0; i < 4; i++){
+            
+        }
+        return order;
+    }
+
+    public boolean checkCollision(){
+
+        return true;
     }
 
     public Tetrominoe [] newPiece() {

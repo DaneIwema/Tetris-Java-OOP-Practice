@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException{
-        WindowsRawMode window = new WindowsRawMode();
+            WindowsRawMode window = new WindowsRawMode();
         window.enableRawMode();
         Container display = new Container();
 
