@@ -1,17 +1,34 @@
 package Tetris;
 
-public abstract class Tetrominoe {
-    //[0] and [[1] represent the piece's x and y coordinates
-    //[2] is the piece's rotation
-    //[3] is the type of piece 1-7
+public class Tetrominoe {
     protected int [] pieceData;
     protected String color;
 
-    public int [] getRotation(){
-        int [][][] rotation = {{{4, 5, 6, 7},{2, 5, 9, 11},{4, 5, 6, 7},{2, 5, 9, 11}}, {{2, 3, 5, 9},{4, 5, 6, 10},{2, 5, 8, 9},{1, 4, 5, 6}},
-    {{1, 2, 5, 9},{3, 4, 5, 6},{2, 5, 9, 10},{4, 5, 6, 8}}, {{2, 3, 4, 5},{2, 5, 6, 10},{2, 3, 4, 5},{2, 5, 6, 10}}, 
-    {{1, 2, 5, 6},{3, 5, 6, 9},{1, 2, 5, 6},{3, 5, 6, 9}}, {{1, 2, 4, 5},{1, 2, 4, 5},{1, 2, 4, 5},{1, 2, 4, 5}}, {{2, 4, 5, 6},{2, 5, 6, 9},{4, 5, 6, 9},{2, 4, 5, 9}}};
-        return rotation[pieceData[3]][pieceData[2]];
+    public Tetrominoe(int type, int column, int row){
+        switch(type){
+            case 1:
+                color = "\033[48;2;20;240;240m \033[0m"; //I
+                break;
+            case 2:
+                color = "\033[48;2;252;127;0m \033[0m"; //L
+                break;
+            case 3:
+                color = "\033[48;2;88;51;255m \033[0m"; //J
+                break;
+            case 4:
+                color = "\033[48;2;252;57;31m \033[0m"; //Z
+                break;
+            case 5:
+                color = "\033[48;2;49;231;34m \033[0m"; //S
+                break;
+            case 6:
+                color = "\033[48;2;234;236;35m \033[0m"; //Cube
+                break;
+            case 7:
+                color = "\033[48;2;180;0;158m \033[0m"; //T
+                break;
+        }
+        pieceData = new int[] {column, row};
     }
 
     public int getX(){
@@ -22,102 +39,22 @@ public abstract class Tetrominoe {
         return pieceData[1];
     }
 
-    public String getColor(){
-        return color;
+    public void setX(int xVal){
+        pieceData[0] = xVal;
     }
 
-    public void moveRight(){
-        pieceData[0]++;
-    }
-
-    public void moveLeft(){
-        pieceData[0]--;
+    public void setY(int yVal){
+        pieceData[1] = yVal;
     }
 
     public void rotate(){
-        if (pieceData[2] == 4)
-            pieceData[2] = 0;
-        pieceData[2]++;
+        int column = (pieceData[0]*(int)Math.cos(90))-(pieceData[1]*(int)Math.sin(90));
+        int row = (pieceData[0]*(int)Math.sin(90))-(pieceData[1]*(int)Math.cos(90));
+        pieceData[0] = column;
+        pieceData[1] = row;
     }
 
-    public void drop(){
-        pieceData[1]++;
-    }
-
-    // IPiece = new int[][] {{4, 5, 6, 7},{2, 5, 9, 11},{4, 5, 6, 7},{2, 5, 9, 11}};
-    // LPiece = new int[][] {{2, 3, 5, 9},{4, 5, 6, 10},{2, 5, 8, 9},{1, 4, 5, 6}};
-    // JPiece = new int[][] {{1, 2, 5, 9},{3, 4, 5, 6},{2, 5, 9, 10},{4, 5, 6, 8}};
-    // ZPiece = new int[][] {{2, 3, 4, 5},{2, 5, 6, 10},{2, 3, 4, 5},{2, 5, 6, 10}};
-    // SPiece = new int[][] {{1, 2, 5, 6},{3, 5, 6, 9},{1, 2, 5, 6},{3, 5, 6, 9}};
-    // CubePiece = new int[][] {{1, 2, 4, 5},{1, 2, 4, 5},{1, 2, 4, 5},{1, 2, 4, 5}};
-    // TPiece = new int[][] {{2, 4, 5, 6},{2, 5, 6, 9},{4, 5, 6, 9},{2, 4, 5, 9}};
-
-}
-
-class IPiece extends Tetrominoe {
-    public IPiece (){
-        super.color = "\033[48;2;20;240;240m \033[0m";
-        pieceData = new int[] {2, 6, 1, 0};
-    }
-}
-
-class LPiece extends Tetrominoe{
-    public LPiece (){
-        super.color = "\033[48;2;252;127;0m \033[0m";
-        pieceData = new int[] {2, 6, 1, 1};
-    }
-}
-
-class JPiece extends Tetrominoe {
-    public JPiece (){
-        super.color = "\033[48;2;88;51;255m \033[0m";
-        pieceData = new int[] {2, 6, 1, 2};
-    }
-}
-
-class ZPiece extends Tetrominoe {
-    public ZPiece (){
-        super.color = "\033[48;2;252;57;31m \033[0m";
-        pieceData = new int[] {2, 6, 1, 3};
-    }
-}
-
-class SPiece extends Tetrominoe {
-    public SPiece (){
-        super.color = "\033[48;2;49;231;34m \033[0m";
-        pieceData = new int[] {2, 6, 1, 4};
-    }
-}
-
-class CubePiece extends Tetrominoe {
-    public CubePiece (){
-        super.color ="\033[48;2;234;236;35m \033[0m";
-        pieceData = new int[] {2, 6, 1, 5};
-    }
-}
-
-class TPiece extends Tetrominoe {
-    public TPiece (){
-        super.color ="\033[48;2;180;0;158m \033[0m";
-        pieceData = new int[] {2, 6, 1, 6};
-    }
-}
-
-class fillerPiece extends Tetrominoe {
-    public fillerPiece (){
-        color = "\033[48;2;203;204;205m \033[0m";
-    }
-}
-
-class outSidePiece extends Tetrominoe {
-    public outSidePiece (){
-        color = "\033[48;2;129;131;131m*\033[0m";
-    }
-}
-
-class blankPiece extends Tetrominoe {
-    public blankPiece (String col, int x, int y){
-        color = col;
-        pieceData = new int[] {x, y};
+    public String getColor(){
+        return color;
     }
 }
