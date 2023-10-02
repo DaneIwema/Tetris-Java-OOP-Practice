@@ -5,108 +5,156 @@ import java.util.Random;
 class Piece {
 
     private Tetrominoe [] pieces;
-    private int [] order;
-    int column;
+    int [] coord;
+    int [][] pieceCoord;
     
     public Piece() {
-        pieces = newPiece();
-        column = 5;
-        order = new int[] {0, 1, 2, 3};
+        coord = new int [] {3, 6};
+        newPiece();
     }
 
     public int getX(){
-        return column;
+        return coord[1];
+    }
+
+    public int getY(){
+        return coord[0];
+    }
+
+    public int getTX(int slot){
+        return pieceCoord[slot][0];
+    }
+
+    public int getTY(int slot){
+        return pieceCoord[slot][1];
     }
 
     public Tetrominoe getTetrominoe(int slot){
         return pieces[slot];
     }
 
-    public String getColor(int slot){
-        return pieces[slot].getColor();
-    }
-
     public void moveRight(){
-        column++;
+        coord[1] = coord[1] + 1;
     }
 
     public void moveLeft(){
-        column--;
+        coord[1] = coord[1] - 1;
+    }
+
+    public void moveDown(){
+        coord[0] = coord[0] + 1;
     }
 
     public void rotate(){
-        for (int i = 0; i < 4; i++)
-        pieces[i].rotate();
-    }
-
-    public int [] getOrder(){
-        return order;
-    }
-
-    public int [] reOrder(){
-        int [] newOrder = new int [4]; 
         for (int i = 0; i < 4; i++){
-            
+            int column = (pieceCoord[i][0]*(int)Math.cos(Math.toRadians(90)))-(pieceCoord[i][1]*(int)Math.sin(Math.toRadians(90)));
+            int row = (pieceCoord[i][0]*(int)Math.sin(Math.toRadians(90)))-(pieceCoord[i][1]*(int)Math.cos(Math.toRadians(90)));
+            pieceCoord[i][0] = column;
+            pieceCoord[i][1] = row;
         }
-        return order;
     }
 
-    public boolean checkCollision(){
-
-        return true;
-    }
-
-    public Tetrominoe [] newPiece() {
+    public void newPiece() {
         Random rand = new Random();
         switch(rand.nextInt(7)){
             case 0: //I
-                return new Tetrominoe [] {
-                    new Tetrominoe(1, -1, 0),
-                    new Tetrominoe(1, 0, 0),
-                    new Tetrominoe(1, 1, 0),
-                    new Tetrominoe(1, 2, 0)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(1),
+                    new Tetrominoe(1),
+                    new Tetrominoe(1),
+                    new Tetrominoe(1)
                 };
+                pieceCoord = new int[][] {
+                    {-1, 0},
+                    {0, 0},
+                    {1, 0},
+                    {2, 0}
+                };
+                break;
             case 1: // L
-                return new Tetrominoe [] {
-                    new Tetrominoe(2, 0, -1),
-                    new Tetrominoe(2, 0, 0),
-                    new Tetrominoe(2, 0, 1),
-                    new Tetrominoe(2, 1, 1)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(2),
+                    new Tetrominoe(2),
+                    new Tetrominoe(2),
+                    new Tetrominoe(2)
                 };
+                pieceCoord = new int[][] {
+                    {0, -1},
+                    {0, 0},
+                    {0, 1},
+                    {1, 1}
+                };
+                break;
             case 2: // J
-                return new Tetrominoe [] {
-                    new Tetrominoe(3, 0, -1),
-                    new Tetrominoe(3, 0, 0),
-                    new Tetrominoe(3, -1, 1),
-                    new Tetrominoe(3, 0, 1)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(3),
+                    new Tetrominoe(3),
+                    new Tetrominoe(3),
+                    new Tetrominoe(3)
                 };
+                pieceCoord = new int[][] {
+                    {0, -1},
+                    {0, 0},
+                    {-1, 1},
+                    {0, 1}
+                };
+                break;
             case 3: // Z
-                return new Tetrominoe [] {
-                    new Tetrominoe(4, -1, 0),
-                    new Tetrominoe(4, 0, 0),
-                    new Tetrominoe(4, 0, 1),
-                    new Tetrominoe(4, 1, 1)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(4),
+                    new Tetrominoe(4),
+                    new Tetrominoe(4),
+                    new Tetrominoe(4)
                 };
+                pieceCoord = new int[][] {
+                    {-1, 0},
+                    {0, 0},
+                    {0, 1},
+                    {1, 1}
+                };
+                break;
             case 4: // S
-                return new Tetrominoe [] {
-                    new Tetrominoe(5, 0, 0),
-                    new Tetrominoe(5, 1, 0),
-                    new Tetrominoe(5, -1, 1),
-                    new Tetrominoe(5, 0, 1)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(5),
+                    new Tetrominoe(5),
+                    new Tetrominoe(5),
+                    new Tetrominoe(5)
                 };
+                pieceCoord = new int[][] {
+                    {0, 0},
+                    {1, 0},
+                    {-1, 1},
+                    {0, 1}
+                };
+                break;
             case 5: // Cube
-                return new Tetrominoe [] {
-                    new Tetrominoe(6, -1, 0),
-                    new Tetrominoe(6, 0, 0),
-                    new Tetrominoe(6, -1, 1),
-                    new Tetrominoe(6, 0, 1)
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(6),
+                    new Tetrominoe(6),
+                    new Tetrominoe(6),
+                    new Tetrominoe(6)
                 };
-        } // T
-        return new Tetrominoe [] {
-            new Tetrominoe(7, -1, 0),
-            new Tetrominoe(7, 0, 0),
-            new Tetrominoe(7, 1, 0),
-            new Tetrominoe(7, 0, 1)
-        };
+                pieceCoord = new int[][] {
+                    {-1, 0},
+                    {0, 0},
+                    {-1, 1},
+                    {0, 1}
+                };
+                break;
+            case 6: // T
+                pieces = new Tetrominoe [] {
+                    new Tetrominoe(7),
+                    new Tetrominoe(7),
+                    new Tetrominoe(7),
+                    new Tetrominoe(7)
+                };
+                pieceCoord = new int[][] {
+                    {-1, 0},
+                    {0, 0},
+                    {1, 0},
+                    {0, 1}
+                };
+                break;
+        }
     }
 }

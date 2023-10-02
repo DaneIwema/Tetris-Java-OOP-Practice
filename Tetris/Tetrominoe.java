@@ -4,7 +4,7 @@ public class Tetrominoe {
     protected int [] pieceData;
     protected String color;
 
-    public Tetrominoe(int type, int column, int row){
+    public Tetrominoe(int type){
         switch(type){
             case 1:
                 color = "\033[48;2;20;240;240m \033[0m"; //I
@@ -28,22 +28,6 @@ public class Tetrominoe {
                 color = "\033[48;2;180;0;158m \033[0m"; //T
                 break;
         }
-        pieceData = new int[] {column, row};
-    }
-
-    public int getX(){
-        return pieceData[0];
-    }
-
-    public int getY(){
-        return pieceData[1];
-    }
-
-    public void rotate(){
-        int column = (pieceData[0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[1]*(int)Math.sin(Math.toRadians(90)));
-        int row = (pieceData[0]*(int)Math.sin(Math.toRadians(90)))-(pieceData[1]*(int)Math.cos(Math.toRadians(90)));
-        pieceData[0] = column;
-        pieceData[1] = row;
     }
 
     public String getColor(){
