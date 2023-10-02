@@ -7,7 +7,7 @@ public class Container {
     public Container() {
         container = new Tetrominoe [20][10];
         piece = new Piece();
-        placePiece();
+        updateDisplay();
     }
     
     private void clearDisplay(){
@@ -16,7 +16,7 @@ public class Container {
         }
     }
 
-    private void placePiece(){
+    private void updateDisplay(){
         for (int i = 0; i < 4; i++){
             container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] = piece.getTetrominoe(i);
         }
@@ -25,25 +25,35 @@ public class Container {
     public void moveRight(){
         clearDisplay();
         piece.moveRight();
-        placePiece();
+        updateDisplay();
     }
 
     public void moveLeft(){
         clearDisplay();
         piece.moveLeft();
-        placePiece();
+        updateDisplay();
     }
 
     public void moveDown(){
         clearDisplay();
         piece.moveDown();
-        placePiece();
+        updateDisplay();
+        if (checkPlacement() == false)
+            piece = new Piece();
     }
 
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        placePiece();
+        updateDisplay();
+    }
+
+    public boolean checkPlacement(){
+        for (int i = 0; i < 4; i++){
+            if (piece.getY() + piece.getTY(i) == 19 || container[piece.getY() + piece.getTY(i) + 1][piece.getX() + piece.getTX(i)] == null)
+                return true;
+        }
+        return false;
     }
 
     public String toString(){
