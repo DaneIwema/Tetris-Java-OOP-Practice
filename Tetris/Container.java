@@ -46,7 +46,6 @@ public class Container {
             updateDisplay();
         }
         else {
-            
             clearDisplay();
             piece.moveDown();
             updateDisplay();
@@ -56,10 +55,13 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
+        if (checkBottomCollisionGreat()){
+            piece.moveUp();
+        }
         if (checkLeftCollision()){
             piece.moveRight();
         }
-        else if (checkRightCollision()){
+        if (checkRightCollision()){
             piece.moveLeft();
         }
         updateDisplay();
@@ -76,6 +78,14 @@ public class Container {
     private boolean checkBottomCollision(){
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) == 19)
+                return true;
+        }
+        return false;
+    }
+
+    private boolean checkBottomCollisionGreat(){
+        for (int i = 0; i < 4; i++){
+            if (piece.getY() + piece.getTY(i) > 19)
                 return true;
         }
         return false;
