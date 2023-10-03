@@ -1,7 +1,6 @@
 package Tetris;
 
 public class Tetrominoe {
-    protected int [] pieceData;
     protected String color;
 
     public Tetrominoe(int type){

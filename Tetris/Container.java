@@ -35,11 +35,15 @@ public class Container {
     }
 
     public void moveDown(){
-        clearDisplay();
-        piece.moveDown();
-        updateDisplay();
-        if (checkPlacement() == false)
+        if (checkPlacement()){
             piece = new Piece();
+            updateDisplay();
+        }
+        else {
+            clearDisplay();
+            piece.moveDown();
+            updateDisplay();
+        }
     }
 
     public void rotate(){
@@ -48,12 +52,25 @@ public class Container {
         updateDisplay();
     }
 
-    public boolean checkPlacement(){
+    private boolean checkPlacement(){
         for (int i = 0; i < 4; i++){
-            if (piece.getY() + piece.getTY(i) == 19 || container[piece.getY() + piece.getTY(i) + 1][piece.getX() + piece.getTX(i)] == null)
+            if (piece.getY() + piece.getTY(i) == 19)
+                return true;
+            else if(container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] == null)
                 return true;
         }
         return false;
+    }
+
+    public void printCheck(){
+        for (int i = 0; i < 4; i++){
+            if (piece.getY() + piece.getTY(i) == 19)
+                System.out.print(1);
+        }
+    }
+
+    public void checkLine(){
+
     }
 
     public String toString(){
@@ -66,7 +83,7 @@ public class Container {
                 if (container[i][j] == null)
                     str.append("\033[48;2;203;204;205m \033[0m");
                 else
-                    str.append(piece.getTetrominoe(0).getColor());
+                    str.append(container[i][j].getColor());
             }
             str.append("\033[48;2;129;131;131m*\033[0m");
             str.append("\n");

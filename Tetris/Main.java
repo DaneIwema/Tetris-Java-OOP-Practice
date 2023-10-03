@@ -27,6 +27,7 @@ public class Main {
                     break;
             }
             System.out.print(display.toString());
+            display.printCheck();
         }
     }
 }
