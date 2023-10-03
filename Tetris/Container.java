@@ -25,7 +25,7 @@ public class Container {
     public void moveRight(){
         clearDisplay();
         piece.moveRight();
-        if (checkRightCollision()){
+        while (checkRightCollision()){
             piece.moveLeft();
         }
         updateDisplay();
@@ -34,7 +34,7 @@ public class Container {
     public void moveLeft(){
         clearDisplay();
         piece.moveLeft();
-        if (checkLeftCollision()){
+        while (checkLeftCollision()){
             piece.moveRight();
         }
         updateDisplay();
@@ -55,13 +55,13 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        if (checkBottomCollisionGreat()){
+        while (checkBottomCollisionGreat()){
             piece.moveUp();
         }
-        if (checkLeftCollision()){
+        while (checkLeftCollision()){
             piece.moveRight();
         }
-        if (checkRightCollision()){
+        while (checkRightCollision()){
             piece.moveLeft();
         }
         updateDisplay();
