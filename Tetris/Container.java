@@ -23,25 +23,29 @@ public class Container {
     }
 
     public void moveRight(){
-        clearDisplay();
-        piece.moveRight();
-        updateDisplay();
+        if (checkRightCollision()){
+            clearDisplay();
+            piece.moveRight();
+            updateDisplay();  
+        }
     }
 
     public void moveLeft(){
-        clearDisplay();
-        piece.moveLeft();
-        updateDisplay();
+        if (checkLeftCollision()){
+            clearDisplay();
+            piece.moveLeft();
+            updateDisplay();
+        }
     }
 
     public void moveDown(){
-        if (checkPlacement()){
-            piece = new Piece();
+        if (checkBottomCollision()){
+            clearDisplay();
+            piece.moveDown();
             updateDisplay();
         }
         else {
-            clearDisplay();
-            piece.moveDown();
+            piece = new Piece();
             updateDisplay();
         }
     }
@@ -52,25 +56,28 @@ public class Container {
         updateDisplay();
     }
 
-    private boolean checkPlacement(){
+    private boolean checkLeftCollision(){
         for (int i = 0; i < 4; i++){
-            if (piece.getY() + piece.getTY(i) == 19)
-                return true;
-            else if(container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] == null)
-                return true;
+            if (piece.getX() + piece.getTX(i) == 0)
+                return false;
         }
-        return false;
+        return true;
     }
 
-    public void printCheck(){
+    private boolean checkBottomCollision(){
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) == 19)
-                System.out.print(1);
+                return false;
         }
+        return true;
     }
 
-    public void checkLine(){
-
+    private boolean checkRightCollision(){
+        for (int i = 0; i < 4; i++){
+            if (piece.getX() + piece.getTX(i) == 9)
+                return false;
+        }
+        return true;
     }
 
     public String toString(){
