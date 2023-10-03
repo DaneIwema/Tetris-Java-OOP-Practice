@@ -6,6 +6,8 @@ public class Container {
 
     public Container() {
         container = new Tetrominoe [20][10];
+        piece = new Piece(1);
+        updateDisplay();
         piece = new Piece();
         updateDisplay();
     }
@@ -71,6 +73,8 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) < 0)
                 return true;
+            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+                return true;
         }
         return false;
     }
@@ -87,6 +91,8 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) > 19)
                 return true;
+            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+                return true;
         }
         return false;
     }
@@ -94,6 +100,8 @@ public class Container {
     private boolean checkRightCollision(){
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) > 9)
+                return true;
+            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
         return false;

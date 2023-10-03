@@ -11,6 +11,22 @@ class Piece {
         newPiece(new int [] {3, 6});
     }
 
+    public Piece(int row) {
+        pieces = new Tetrominoe [] {
+                    new Tetrominoe(1),
+                    new Tetrominoe(1),
+                    new Tetrominoe(1),
+                    new Tetrominoe(1)
+                };
+                pieceData = new int[][] {
+                    {0, -2},
+                    {0, -1},
+                    {0, 0},
+                    {0, 1},
+                    {18, 4}
+                };
+    }
+
     public int getX(){
         return pieceData[4][1];
     }
