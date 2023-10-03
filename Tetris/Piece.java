@@ -43,6 +43,10 @@ class Piece {
         pieceData[4][0] = pieceData[4][0] + 1;
     }
 
+    public void moveUp(){
+        pieceData[4][0] = pieceData[4][0] - 1;
+    }
+
     public void rotate(){
         for (int i = 0; i < 4; i++){
             int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(90)));

@@ -23,29 +23,32 @@ public class Container {
     }
 
     public void moveRight(){
+        clearDisplay();
+        piece.moveRight();
         if (checkRightCollision()){
-            clearDisplay();
-            piece.moveRight();
-            updateDisplay();  
+            piece.moveLeft();
         }
+        updateDisplay();
     }
 
     public void moveLeft(){
+        clearDisplay();
+        piece.moveLeft();
         if (checkLeftCollision()){
-            clearDisplay();
-            piece.moveLeft();
-            updateDisplay();
+            piece.moveRight();
         }
+        updateDisplay();
     }
 
     public void moveDown(){
         if (checkBottomCollision()){
-            clearDisplay();
-            piece.moveDown();
+            piece = new Piece();
             updateDisplay();
         }
         else {
-            piece = new Piece();
+            
+            clearDisplay();
+            piece.moveDown();
             updateDisplay();
         }
     }
@@ -53,31 +56,37 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
+        if (checkLeftCollision()){
+            piece.moveRight();
+        }
+        else if (checkRightCollision()){
+            piece.moveLeft();
+        }
         updateDisplay();
     }
 
     private boolean checkLeftCollision(){
         for (int i = 0; i < 4; i++){
-            if (piece.getX() + piece.getTX(i) == 0)
-                return false;
+            if (piece.getX() + piece.getTX(i) < 0)
+                return true;
         }
-        return true;
+        return false;
     }
 
     private boolean checkBottomCollision(){
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) == 19)
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private boolean checkRightCollision(){
         for (int i = 0; i < 4; i++){
-            if (piece.getX() + piece.getTX(i) == 9)
-                return false;
+            if (piece.getX() + piece.getTX(i) > 9)
+                return true;
         }
-        return true;
+        return false;
     }
 
     public String toString(){
