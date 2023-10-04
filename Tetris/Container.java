@@ -57,11 +57,11 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        while (checkLeftCollision()){
-            piece.moveRight();
-        }
         while (checkRightCollision()){
             piece.moveLeft();
+        }
+        while (checkLeftCollision()){
+            piece.moveRight();
         }
         while (checkBottomCollisionAfterMove()){
             piece.moveUp();
@@ -69,12 +69,27 @@ public class Container {
         updateDisplay();
     }
 
+    private int getLeftMost(){
+        return Math.min(Math.min(piece.getX() + piece.getTX(0), piece.getX() + piece.getTX(1)), 
+            Math.min(piece.getX() + piece.getTX(2), piece.getX() + piece.getTX(3)));
+    }
+
+    private int getRightMost(){
+        return Math.max(Math.max(piece.getX() + piece.getTX(0), piece.getX() + piece.getTX(1)), 
+            Math.max(piece.getX() + piece.getTX(2), piece.getX() + piece.getTX(3)));
+    }
+
+    private int getBottomMost(){
+        return Math.max(Math.max(piece.getY() + piece.getTY(0), piece.getY() + piece.getTY(1)), 
+            Math.max(piece.getY() + piece.getTY(2), piece.getY() + piece.getTY(3)));
+    }
+
     private boolean checkLeftCollision(){
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) < 0)
                 return true;
-            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
-                return true;
+            if (getLeftMost() == piece.getX() + piece.getTX(i) && container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+                return false;
         }
         return false;
     }
@@ -101,7 +116,7 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) > 9)
                 return true;
-            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+            if (getRightMost() == piece.getX() + piece.getTX(i) && container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
         return false;
@@ -120,6 +135,20 @@ public class Container {
                     str.append(container[i][j].getColor());
             }
             str.append("\033[48;2;129;131;131m*\033[0m");
+            if (i == 3) {
+                    str.append("       ");
+                    str.append(checkLeftCollision());
+                }
+                if (i == 4) {
+                    str.append("       ");
+                    str.append(piece.getX() + piece.getTX(0));
+                    str.append(", ");
+                    str.append(piece.getX() + piece.getTX(1));
+                    str.append(", ");
+                    str.append(piece.getX() + piece.getTX(2));
+                    str.append(", ");
+                    str.append(piece.getX() + piece.getTX(3));
+                }
             str.append("\n");
         }
         str.append("\033[48;2;129;131;131m************\033[0m");
