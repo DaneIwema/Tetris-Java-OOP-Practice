@@ -57,14 +57,14 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        while (checkBottomCollisionGreat()){
-            piece.moveUp();
-        }
         while (checkLeftCollision()){
             piece.moveRight();
         }
         while (checkRightCollision()){
             piece.moveLeft();
+        }
+        while (checkBottomCollisionAfterMove()){
+            piece.moveUp();
         }
         updateDisplay();
     }
@@ -87,7 +87,7 @@ public class Container {
         return false;
     }
 
-    private boolean checkBottomCollisionGreat(){
+    private boolean checkBottomCollisionAfterMove(){
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) > 19)
                 return true;
