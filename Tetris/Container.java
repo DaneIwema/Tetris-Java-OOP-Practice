@@ -63,7 +63,7 @@ public class Container {
         while (checkLeftCollisionAfterMove()){
             piece.moveRight();
         }
-        if (checkBottomCollisionAfterMove()){
+        while (checkBottomCollisionAfterMove()){
             piece.moveUp();
         }
         updateDisplay();
@@ -93,7 +93,11 @@ public class Container {
 
     private boolean checkBottomCollisionAfterMove(){
         for (int i = 0; i < 4; i++){
-            
+            if (piece.getY() + piece.getTY(i) > 19)
+                return true;
+            if (CheckIfBottomPiece(i) && 
+                container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+                return true;
         }
         return false;
     }
@@ -102,7 +106,7 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getY() + piece.getTY(i) == 19)
                 return true;
-            if (getBottomMost() == piece.getY() + piece.getTY(i) && 
+            if (CheckIfBottomPiece(i) && 
                 container[piece.getY() + piece.getTY(i) + 1][piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
@@ -110,20 +114,26 @@ public class Container {
     }
 
     private int getLeftMost(){
-        return Math.min(Math.min(piece.getX() + piece.getTX(0), piece.getX() + piece.getTX(1)), 
-            Math.min(piece.getX() + piece.getTX(2), piece.getX() + piece.getTX(3)));
+        return Math.min(Math.min(piece.getTX(0), piece.getTX(1)), 
+            Math.min(piece.getTX(2), piece.getTX(3)));
     }
 
     private int getRightMost(){
-        return Math.max(Math.max(piece.getX() + piece.getTX(0), piece.getX() + piece.getTX(1)), 
-            Math.max(piece.getX() + piece.getTX(2), piece.getX() + piece.getTX(3)));
+        return Math.max(Math.max(piece.getTX(0), piece.getTX(1)), 
+            Math.max(piece.getTX(2), piece.getTX(3)));
     }
 
     private int getBottomMost(){
-        return Math.max(
-            Math.max(piece.getY() + piece.getTY(0), piece.getY() + piece.getTY(1)), 
-            Math.max(piece.getY() + piece.getTY(2), piece.getY() + piece.getTY(3))
-        );
+        return Math.max(Math.max(piece.getTY(0), piece.getTY(1)), 
+            Math.max(piece.getTY(2), piece.getTY(3)));
+    }
+
+    private boolean CheckIfBottomPiece(int slot){
+        if(getBottomMost() == piece.getTY(slot))
+            return true;
+        if (piece.getTX(getBottomMost()) != piece.getTX(slot))
+            return true;
+        return false;
     }
 
     public String toString(){
@@ -148,7 +158,7 @@ public class Container {
             if (i == 4) {
                 str.append(" ");
                 for (int h = 0; h < 4; h++){
-                    if (getBottomMost() == piece.getY() + piece.getTY(h)){
+                    if (CheckIfBottomPiece(h)){
                         str.append(1);
                     }
                     else {
