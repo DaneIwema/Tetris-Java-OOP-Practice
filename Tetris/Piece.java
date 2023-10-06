@@ -5,30 +5,29 @@ import java.util.Random;
 class Piece {
 
     private Tetrominoe [] pieces;
+
+    //[0]-[3]([0]-[1]) block coordinates
+    //[0]-[3]([2]) Is bottom piece or not
+    //[4]([0]-[1]) piece coordinates
+    //[4][2] piece type
+    //[4][3] piece rotation
+
     int [][] pieceData;
     
     public Piece() {
-        newPiece(new int [] {1, 6});
+        newPiece(4, 6, 1);
     }
 
-    public Piece(int row) {
-        pieces = new Tetrominoe [] {
-                    new Tetrominoe(1),
-                    new Tetrominoe(1),
-                    new Tetrominoe(1),
-                    new Tetrominoe(1)
-                };
-                pieceData = new int[][] {
-                    {0, -2},
-                    {0, -1},
-                    {0, 0},
-                    {0, 1},
-                    {18, 4}
-                };
+    public Piece(int x, int y, int i) {
+        newPiece(x, y, i);
     }
 
     public int getX(){
         return pieceData[4][1];
+    }
+
+    public int getRotation(){
+        return pieceData[4][3];
     }
 
     public int getY(){
@@ -64,16 +63,21 @@ class Piece {
     }
 
     public void rotate(){
-        for (int i = 0; i < 4; i++){
+        if (pieceData[4][2] != 1)
+        {for (int i = 0; i < 4; i++){
             int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(90)));
             int row = (pieceData[i][0]*(int)Math.sin(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.cos(Math.toRadians(90)));
             pieceData[i][0] = column;
             pieceData[i][1] = row;
         }
+        if (pieceData[4][3] == 4)
+            pieceData[4][3] = 0;
+        pieceData[4][3] = pieceData[4][3] + 1;
+        updateBottomPieces();}
     }
 
     public boolean checkLeftMost(int slot){
-        if (Math.min(Math.min(getTX(0), getTX(1)), 
+        if (Math.min(Math.min(getTX(0), getTX(1)),
             Math.min(getTX(2), getTX(3))) == getTY(slot))
             return true;
         return false;
@@ -86,127 +90,193 @@ class Piece {
         return false;
     }
     
-    public boolean checkBottomMost(int slot){
+    private boolean checkBottomMost(int slot){
         if (Math.max(Math.max(getTY(0), getTY(1)), 
             Math.max(getTY(2), getTY(3))) == getTY(slot))
             return true;
         return false;
     }
 
-    public boolean CheckIfBottomPiece(int slot){
-        if(checkBottomMost(slot))
+    //returns the bottom most piece if there is one
+    private int getBottomMostPiece(){
+        for (int i = 0; i < 3; i++){
+            if (checkBottomMost(i))
+                return i;
+        }
+        return 3;
+    }
+
+    public boolean checkBottom(int slot){
+        if(pieceData[slot][2] == 1)
             return true;
         return false;
     }
 
-    public void newPiece(int [] coord) {
+    public void updateBottomPieces(){
+        switch(pieceData[4][2]){
+            case 0:
+            case 1:
+                updateBottomIfIOrCubePiece();
+                break;
+            case 2:
+                updateBottomIfIOrCubePiece();
+                ifT();
+                break;
+            case 3:
+            case 4:
+                if (pieceData[4][3] == 1)
+                    updateBottomIfIOrCubePiece();
+                else if (pieceData[4][3] == 2 || pieceData[4][3] == 4){
+                    updateBottomIfIOrCubePiece();
+                    IfHasWIngs();
+                }
+                else
+                    ifLOrJThirdRot();
+                break;
+            case 5:
+            case 6:
+                if(pieceData[4][3] == 1 || pieceData[4][3] == 3){
+                    updateBottomIfIOrCubePiece();
+                    IfHasWIngs();
+                }
+                else {
+                    updateBottomIfIOrCubePiece();
+                    ifStackedSides(getBottomMostPiece());
+                }
+        }
+    }
+
+    private void ifLOrJThirdRot(){
+        if(pieceData[4][2] == 4){
+            pieceData[0][2] = 1;
+            pieceData[1][2] = 0;
+            pieceData[2][2] = 1;
+            pieceData[3][2] = 1;
+        }
+        else if (pieceData[4][2] == 3){
+            pieceData[0][2] = 1;
+            pieceData[1][2] = 1;
+            pieceData[2][2] = 0;
+            pieceData[3][2] = 1;
+        }
+    }
+
+    private void updateBottomIfIOrCubePiece(){
+        for (int i = 0; i < 4; i++)
+            if (checkBottomMost(i))
+                pieceData[i][2] = 1;
+            else
+                pieceData[i][2] = 0;
+    }
+
+    private void ifT(){
+        for (int i = 0; i < 4; i++)
+                if(getTX(i) != 0)
+                    pieceData[i][2] = 1;
+    }
+
+    private void IfHasWIngs(){
+        for (int i = 0; i < 4; i++)
+            if(getTX(i) != 0)
+                pieceData[i][2] = 1;
+    }
+
+    public void ifStackedSides(int bottom){
+        for (int i = 0; i < 4; i++)
+            if (getTX(bottom) != getTX(i) && getTY(i) == 0)
+                pieceData[i][2] = 1;
+    }
+
+    public void newPiece(int x, int y, int j) {
         Random rand = new Random();
-        switch(rand.nextInt(7)){
+        // rand.nextInt(7)
+        switch(j){
             case 0: //I
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(1),
-                    new Tetrominoe(1),
-                    new Tetrominoe(1),
-                    new Tetrominoe(1)
-                };
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;20;240;240m \033[0m");
                 pieceData = new int[][] {
-                    {-1, 0},
-                    {0, 0},
-                    {1, 0},
-                    {2, 0},
-                    coord
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {1, 0, 0},
+                    {2, 0, 0},
+                    {x, y, 0, 1}
                 };
                 break;
-            case 1: // L
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(2),
-                    new Tetrominoe(2),
-                    new Tetrominoe(2),
-                    new Tetrominoe(2)
-                };
+            case 1: // Cube
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;234;236;35m \033[0m");
                 pieceData = new int[][] {
-                    {0, -1},
-                    {0, 0},
-                    {0, 1},
-                    {1, 1},
-                    coord
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {-1, 1, 0},
+                    {0, 1, 0},
+                    {x, y, 1, 1}
                 };
                 break;
-            case 2: // J
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(3),
-                    new Tetrominoe(3),
-                    new Tetrominoe(3),
-                    new Tetrominoe(3)
-                };
+            case 2: // T
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;180;0;158m \033[0m");
                 pieceData = new int[][] {
-                    {0, -1},
-                    {0, 0},
-                    {-1, 1},
-                    {0, 1},
-                    coord
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {1, 0, 0},
+                    {0, 1, 0},
+                    {x, y, 2, 1}
                 };
                 break;
-            case 3: // Z
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(4),
-                    new Tetrominoe(4),
-                    new Tetrominoe(4),
-                    new Tetrominoe(4)
-                };
+            case 3: // L
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;252;127;0m \033[0m");
                 pieceData = new int[][] {
-                    {-1, 0},
-                    {0, 0},
-                    {0, 1},
-                    {1, 1},
-                    coord
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {1, 0, 0},
+                    {1, -1, 0},
+                    {x, y, 3, 1}
                 };
                 break;
-            case 4: // S
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(5),
-                    new Tetrominoe(5),
-                    new Tetrominoe(5),
-                    new Tetrominoe(5)
-                };
+            case 4: // J
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;88;51;255m \033[0m");
                 pieceData = new int[][] {
-                    {0, 0},
-                    {1, 0},
-                    {-1, 1},
-                    {0, 1},
-                    coord
+                    {-1, -1, 0},
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {1, 0, 0},
+                    {x, y, 4, 1}
                 };
                 break;
-            case 5: // Cube
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(6),
-                    new Tetrominoe(6),
-                    new Tetrominoe(6),
-                    new Tetrominoe(6)
-                };
+            
+            case 5: // Z
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;252;57;31m \033[0m");
                 pieceData = new int[][] {
-                    {-1, 0},
-                    {0, 0},
-                    {-1, 1},
-                    {0, 1},
-                    coord
+                    {-1, 0, 0},
+                    {0, 0, 0},
+                    {0, 1, 0},
+                    {1, 1, 0},
+                    {x, y, 5, 1}
                 };
                 break;
-            case 6: // T
-                pieces = new Tetrominoe [] {
-                    new Tetrominoe(7),
-                    new Tetrominoe(7),
-                    new Tetrominoe(7),
-                    new Tetrominoe(7)
-                };
+            case 6: // S
+                pieces = new Tetrominoe [4];
+                    for (int i = 0; i < 4; i++)
+                        pieces[i] = new Tetrominoe("\033[48;2;49;231;34m \033[0m");
                 pieceData = new int[][] {
-                    {-1, 0},
-                    {0, 0},
-                    {1, 0},
-                    {0, 1},
-                    coord
+                    {0, 0, 0},
+                    {1, 0, 0},
+                    {-1, 1, 0},
+                    {0, 1, 0},
+                    {x, y, 6, 1}
                 };
                 break;
         }
+        updateBottomPieces();
     }
 }
