@@ -8,7 +8,7 @@ class Piece {
     int [][] pieceData;
     
     public Piece() {
-        newPiece(new int [] {3, 6});
+        newPiece(new int [] {1, 6});
     }
 
     public Piece(int row) {
@@ -70,6 +70,33 @@ class Piece {
             pieceData[i][0] = column;
             pieceData[i][1] = row;
         }
+    }
+
+    public boolean checkLeftMost(int slot){
+        if (Math.min(Math.min(getTX(0), getTX(1)), 
+            Math.min(getTX(2), getTX(3))) == getTY(slot))
+            return true;
+        return false;
+    }
+
+    public boolean checkRightMost(int slot){
+        if(Math.max(Math.max(getTX(0), getTX(1)), 
+            Math.max(getTX(2), getTX(3))) == getTY(slot))
+            return true;
+        return false;
+    }
+    
+    public boolean checkBottomMost(int slot){
+        if (Math.max(Math.max(getTY(0), getTY(1)), 
+            Math.max(getTY(2), getTY(3))) == getTY(slot))
+            return true;
+        return false;
+    }
+
+    public boolean CheckIfBottomPiece(int slot){
+        if(checkBottomMost(slot))
+            return true;
+        return false;
     }
 
     public void newPiece(int [] coord) {
