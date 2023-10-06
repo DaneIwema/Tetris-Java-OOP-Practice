@@ -15,11 +15,7 @@ class Piece {
     int [][] pieceData;
     
     public Piece() {
-        newPiece(4, 6, 1);
-    }
-
-    public Piece(int x, int y, int i) {
-        newPiece(x, y, i);
+        newPiece(4, 6);
     }
 
     public int getX(){
@@ -63,31 +59,33 @@ class Piece {
     }
 
     public void rotate(){
-        if (pieceData[4][2] != 1)
-        {for (int i = 0; i < 4; i++){
+        if (pieceData[4][2] != 1){
+            for (int i = 0; i < 4; i++){
             int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(90)));
             int row = (pieceData[i][0]*(int)Math.sin(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.cos(Math.toRadians(90)));
             pieceData[i][0] = column;
             pieceData[i][1] = row;
+            }
+            if (pieceData[4][3] == 4)
+                pieceData[4][3] = 0;
+            pieceData[4][3] = pieceData[4][3] + 1;
+            updateBottomPieces();
         }
-        if (pieceData[4][3] == 4)
-            pieceData[4][3] = 0;
-        pieceData[4][3] = pieceData[4][3] + 1;
-        updateBottomPieces();}
     }
 
-    public boolean checkLeftMost(int slot){
-        if (Math.min(Math.min(getTX(0), getTX(1)),
-            Math.min(getTX(2), getTX(3))) == getTY(slot))
-            return true;
-        return false;
-    }
-
-    public boolean checkRightMost(int slot){
-        if(Math.max(Math.max(getTX(0), getTX(1)), 
-            Math.max(getTX(2), getTX(3))) == getTY(slot))
-            return true;
-        return false;
+    public void revRotate(){
+        if (pieceData[4][2] != 1){
+            for (int i = 0; i < 4; i++){
+            int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(-90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(-90)));
+            int row = (pieceData[i][0]*(int)Math.sin(Math.toRadians(-90)))-(pieceData[i][1]*(int)Math.cos(Math.toRadians(-90)));
+            pieceData[i][0] = column;
+            pieceData[i][1] = row;
+            }
+            if (pieceData[4][3] == 0)
+                pieceData[4][3] = 5;
+            pieceData[4][3] = pieceData[4][3] - 1;
+            updateBottomPieces();
+        }
     }
     
     private boolean checkBottomMost(int slot){
@@ -187,10 +185,9 @@ class Piece {
                 pieceData[i][2] = 1;
     }
 
-    public void newPiece(int x, int y, int j) {
+    public void newPiece(int x, int y) {
         Random rand = new Random();
-        // rand.nextInt(7)
-        switch(j){
+        switch(rand.nextInt(7)){
             case 0: //I
                 pieces = new Tetrominoe [4];
                     for (int i = 0; i < 4; i++)

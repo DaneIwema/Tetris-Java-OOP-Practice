@@ -3,12 +3,10 @@ package Tetris;
 public class Container {
     Tetrominoe [][] container;
     Piece piece;
-    Piece pieceTwo;
 
     public Container() {
         container = new Tetrominoe [24][10];
-        piece = new Piece(5, 2, 5);
-        pieceTwo = new Piece(5, 8, 6);
+        piece = new Piece();
         updateDisplay();
     }
     
@@ -16,17 +14,11 @@ public class Container {
         for (int i = 0; i < 4; i++){
             container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] = null;
         }
-        for (int i = 0; i < 4; i++){
-            container[pieceTwo.getY() + pieceTwo.getTY(i)][pieceTwo.getX() + pieceTwo.getTX(i)] = null;
-        }
     }
 
     private void updateDisplay(){
         for (int i = 0; i < 4; i++){
             container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] = piece.getTetrominoe(i);
-        }
-        for (int i = 0; i < 4; i++){
-            container[pieceTwo.getY() + pieceTwo.getTY(i)][pieceTwo.getX() + pieceTwo.getTX(i)] = pieceTwo.getTetrominoe(i);
         }
     }
 
@@ -63,7 +55,6 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        pieceTwo.rotate();
         while (checkRightCollisionAfterMove()){
             piece.moveLeft();
         }
@@ -80,8 +71,8 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) < 0)
                 return true;
-                if (piece.checkLeftMost(i) && container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
-                return false;
+            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+                return true;
         }
         return false;
     }
@@ -90,7 +81,7 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) > 9)
                 return true;
-            if (piece.checkRightMost(i) && container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
         return false;
@@ -118,23 +109,7 @@ public class Container {
         return false;
     }
 
-    private void updatePiece(){
-        for (int i = 0; i < 4; i++){
-            if (piece.checkBottom(i))
-                piece.getTetrominoe(i).setColor("1");
-            else
-                piece.getTetrominoe(i).setColor("0");
-        }
-        for (int i = 0; i < 4; i++){
-            if (pieceTwo.checkBottom(i))
-                pieceTwo.getTetrominoe(i).setColor("1");
-            else
-                pieceTwo.getTetrominoe(i).setColor("0");
-        }
-    }
-
     public String toString(){
-        updatePiece();
         StringBuilder str = new StringBuilder();
         str.append("\033[2J");
         str.append("\033[H");
@@ -147,9 +122,11 @@ public class Container {
                     str.append(container[i][j].getColor());
             }
             str.append("\033[48;2;129;131;131m*\033[0m");
-            if (i == 5){
+            if(i == 5){
                 str.append("   ");
-                str.append(piece.getRotation());
+                str.append(checkLeftCollisionAfterMove());
+                str.append("   ");
+                str.append(checkLeftCollisionAfterMove());
             }
             str.append("\n");
         }
