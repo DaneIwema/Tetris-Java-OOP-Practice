@@ -89,14 +89,8 @@ public class Container {
     public void rotate(){
         clearDisplay();
         piece.rotate();
-        while (checkRightCollisionAfterMove()){
-            piece.moveLeft();
-        }
-        while (checkLeftCollisionAfterMove()){
-            piece.moveRight();
-        }
-        while (checkBottomCollisionAfterMove()){
-            piece.moveUp();
+        while (checkCollisions()){
+            piece.rotate();
         }
         updateDisplay();
     }
@@ -123,11 +117,14 @@ public class Container {
         return false;
     }
 
-    private boolean checkBottomCollisionAfterMove(){
+    private boolean checkCollisions(){
         for (int i = 0; i < 4; i++){
-            if (piece.getY() + piece.getTY(i) > 19)
-                return true;
-            if (piece.checkBottom(i) && curRow.row[piece.getX() + piece.getTX(i)] != null)
+            if (piece.getX() + piece.getTX(i) < 0)
+                piece.moveRight();
+            if (piece.getX() + piece.getTX(i) > 9)
+                piece.moveLeft();
+            Node curP = navigate(piece.getY() + piece.getTY(i), curRow);
+            if (piece.checkBottom(i) && curP.row[piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
         return false;
@@ -163,11 +160,7 @@ public class Container {
             str.append("\033[48;2;129;131;131m*\033[0m");
             if (curP.rowId == 6){
                 str.append("    ");
-                str.append(checkLeftCollisionAfterMove());
-                str.append("     ");
-                str.append(checkBottomCollision());
-                str.append("     ");
-                str.append(checkRightCollisionAfterMove());
+                str.append(checkCollisions());
             }
             str.append("\n");
             curP = curP.next;
