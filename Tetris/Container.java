@@ -81,7 +81,7 @@ public class Container {
         for (int i = 0; i < 4; i++){
             if (piece.getX() + piece.getTX(i) > 9)
                 return true;
-            if (container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
+            if (piece.getX() + piece.getTX(i) > 1 && container[piece.getY() + piece.getTY(i)][piece.getX() + piece.getTX(i)] != null)
                 return true;
         }
         return false;
