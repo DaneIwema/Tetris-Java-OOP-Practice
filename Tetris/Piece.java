@@ -15,7 +15,7 @@ class Piece {
     int [][] pieceData;
     
     public Piece() {
-        newPiece(4, 6);
+        newPiece(2, 6);
     }
 
     public int getX(){
@@ -69,21 +69,6 @@ class Piece {
             if (pieceData[4][3] == 4)
                 pieceData[4][3] = 0;
             pieceData[4][3] = pieceData[4][3] + 1;
-            updateBottomPieces();
-        }
-    }
-
-    public void revRotate(){
-        if (pieceData[4][2] != 1){
-            for (int i = 0; i < 4; i++){
-            int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(-90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(-90)));
-            int row = (pieceData[i][0]*(int)Math.sin(Math.toRadians(-90)))-(pieceData[i][1]*(int)Math.cos(Math.toRadians(-90)));
-            pieceData[i][0] = column;
-            pieceData[i][1] = row;
-            }
-            if (pieceData[4][3] == 0)
-                pieceData[4][3] = 5;
-            pieceData[4][3] = pieceData[4][3] - 1;
             updateBottomPieces();
         }
     }
