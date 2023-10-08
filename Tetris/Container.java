@@ -175,20 +175,32 @@ public class Container {
     }
 
     private void checkRowCompletion(){
-        boolean [] fullRows = new boolean[4];
-        for (int i = 0; i < 4; i++){
-            if (fullRows[pieces[i].getY() + 2] == false)
-                fullRows[pieces[i].getY() + 2] = true;
+        Node curP = head;
+        while (curP != null){
+            for (int i = 0; i < 10; i ++){
+                if (curP.row[i] == null)
+                    break;
+                else if(i == 9)
+                    clearLine(curP);
+            }
+            curP = curP.next;
         }
-        clearLine(navigate(pieces[1].getTY(i), curRow));
     }
 
     private void clearLine(Node delete){
-        for (int i = 0; i < 10; i ++){
-            if (delete.row[i] == null)
-                return;
+        if (delete == head){
+            head = head.next;
+            head.prev = null;
         }
-
+        else {
+            Node curP = delete.next;
+            Node curPTwo = delete.prev;
+            curP.prev = curPTwo;
+            curPTwo.next = curP;
+        }
+        Node curP = new Node(tail);
+        tail.next = curP;
+        tail = curP;
     }
 
     private void sideScreenUpdate(){

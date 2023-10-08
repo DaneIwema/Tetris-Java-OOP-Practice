@@ -7,11 +7,11 @@ public class Main {
         WindowsRawMode window = new WindowsRawMode();
         window.enableRawMode();
         Container display = new Container();
+        System.out.print(display.toString());
         while (true){
-            System.out.print(display.toString());
             int key = System.in.read();
             switch (key){
-                case 97:
+                case 'a':
                     display.moveLeft();
                     break;
                 case 100:
@@ -27,6 +27,7 @@ public class Main {
                     display.savePiece();
                     break;
             }
+            System.out.print(display.toString());
         }
     }
 }
