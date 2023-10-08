@@ -6,11 +6,9 @@ public class Main {
     public static void main(String[] args) throws IOException{
         WindowsRawMode window = new WindowsRawMode();
         window.enableRawMode();
-
         Container display = new Container();
-        System.out.println(display.toString());
-
         while (true){
+            System.out.print(display.toString());
             int key = System.in.read();
             switch (key){
                 case 97:
@@ -25,8 +23,10 @@ public class Main {
                 case 115:
                     display.moveDown();
                     break;
+                case 32:
+                    display.savePiece();
+                    break;
             }
-            System.out.print(display.toString());
         }
     }
 }

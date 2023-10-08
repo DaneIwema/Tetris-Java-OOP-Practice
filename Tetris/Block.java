@@ -1,9 +1,9 @@
 package Tetris;
 
-public class Tetrominoe {
+public class Block {
     protected String color;
 
-    public Tetrominoe(String col){
+    public Block(String col){
         color = col;
     }
 

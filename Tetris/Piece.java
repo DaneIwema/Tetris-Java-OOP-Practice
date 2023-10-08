@@ -4,71 +4,84 @@ import java.util.Random;
 
 class Piece {
 
-    private Tetrominoe [] pieces;
+    private Block [] blocks;
 
+    int [][] blockData;
     //[0]-[3]([0]-[1]) block coordinates
     //[0]-[3]([2]) Is bottom piece or not
     //[4]([0]-[1]) piece coordinates
     //[4][2] piece type
     //[4][3] piece rotation
 
-    int [][] pieceData;
-    
     public Piece() {
         newPiece(2, 6);
     }
 
     public int getX(){
-        return pieceData[4][1];
-    }
-
-    public int getRotation(){
-        return pieceData[4][3];
+        return blockData[4][1];
     }
 
     public int getY(){
-        return pieceData[4][0];
+        return blockData[4][0];
+    }
+
+    public void setX(int col){
+        blockData[4][1] = col;
+    }
+    
+    public void setY(int row){
+        blockData[4][0] = row;
+    }
+
+    public int getRotation(){
+        return blockData[4][3];
+    }
+
+    public void setRotation(int target){
+        for (int i = blockData[4][3]; i < target + 4; i++)
+            rotate();
+        blockData[4][3] = target;
     }
 
     public int getTX(int slot){
-        return pieceData[slot][0];
+        return blockData[slot][0];
     }
 
     public int getTY(int slot){
-        return pieceData[slot][1];
+        return blockData[slot][1];
     }
 
-    public Tetrominoe getTetrominoe(int slot){
-        return pieces[slot];
+    public Block getTetrominoe(int slot){
+        return blocks[slot];
     }
 
     public void moveRight(){
-        pieceData[4][1] = pieceData[4][1] + 1;
+        blockData[4][1] = blockData[4][1] + 1;
     }
 
     public void moveLeft(){
-        pieceData[4][1] = pieceData[4][1] - 1;
+        blockData[4][1] = blockData[4][1] - 1;
     }
 
     public void moveDown(){
-        pieceData[4][0] = pieceData[4][0] + 1;
+        blockData[4][0] = blockData[4][0] + 1;
     }
 
     public void moveUp(){
-        pieceData[4][0] = pieceData[4][0] - 1;
+        blockData[4][0] = blockData[4][0] - 1;
     }
 
     public void rotate(){
-        if (pieceData[4][2] != 1){
+        if (blockData[4][2] != 1){
             for (int i = 0; i < 4; i++){
-            int column = (pieceData[i][0]*(int)Math.cos(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.sin(Math.toRadians(90)));
-            int row = (pieceData[i][0]*(int)Math.sin(Math.toRadians(90)))-(pieceData[i][1]*(int)Math.cos(Math.toRadians(90)));
-            pieceData[i][0] = column;
-            pieceData[i][1] = row;
+            int column = (blockData[i][0]*(int)Math.cos(Math.toRadians(90)))-(blockData[i][1]*(int)Math.sin(Math.toRadians(90)));
+            int row = (blockData[i][0]*(int)Math.sin(Math.toRadians(90)))-(blockData[i][1]*(int)Math.cos(Math.toRadians(90)));
+            blockData[i][0] = column;
+            blockData[i][1] = row;
             }
-            if (pieceData[4][3] == 4)
-                pieceData[4][3] = 0;
-            pieceData[4][3] = pieceData[4][3] + 1;
+            if (blockData[4][3] == 4)
+                blockData[4][3] = 0;
+            blockData[4][3] = blockData[4][3] + 1;
             updateBottomPieces();
         }
     }
@@ -90,13 +103,13 @@ class Piece {
     }
 
     public boolean checkBottom(int slot){
-        if(pieceData[slot][2] == 1)
+        if(blockData[slot][2] == 1)
             return true;
         return false;
     }
 
     public void updateBottomPieces(){
-        switch(pieceData[4][2]){
+        switch(blockData[4][2]){
             case 0:
             case 1:
                 updateBottomIfIOrCubePiece();
@@ -107,9 +120,9 @@ class Piece {
                 break;
             case 3:
             case 4:
-                if (pieceData[4][3] == 1)
+                if (blockData[4][3] == 1)
                     updateBottomIfIOrCubePiece();
-                else if (pieceData[4][3] == 2 || pieceData[4][3] == 4){
+                else if (blockData[4][3] == 2 || blockData[4][3] == 4){
                     updateBottomIfIOrCubePiece();
                     IfHasWIngs();
                 }
@@ -118,7 +131,7 @@ class Piece {
                 break;
             case 5:
             case 6:
-                if(pieceData[4][3] == 1 || pieceData[4][3] == 3){
+                if(blockData[4][3] == 1 || blockData[4][3] == 3){
                     updateBottomIfIOrCubePiece();
                     IfHasWIngs();
                 }
@@ -130,54 +143,54 @@ class Piece {
     }
 
     private void ifLOrJThirdRot(){
-        if(pieceData[4][2] == 4){
-            pieceData[0][2] = 1;
-            pieceData[1][2] = 0;
-            pieceData[2][2] = 1;
-            pieceData[3][2] = 1;
+        if(blockData[4][2] == 4){
+            blockData[0][2] = 1;
+            blockData[1][2] = 0;
+            blockData[2][2] = 1;
+            blockData[3][2] = 1;
         }
-        else if (pieceData[4][2] == 3){
-            pieceData[0][2] = 1;
-            pieceData[1][2] = 1;
-            pieceData[2][2] = 0;
-            pieceData[3][2] = 1;
+        else if (blockData[4][2] == 3){
+            blockData[0][2] = 1;
+            blockData[1][2] = 1;
+            blockData[2][2] = 0;
+            blockData[3][2] = 1;
         }
     }
 
     private void updateBottomIfIOrCubePiece(){
         for (int i = 0; i < 4; i++)
             if (checkBottomMost(i))
-                pieceData[i][2] = 1;
+                blockData[i][2] = 1;
             else
-                pieceData[i][2] = 0;
+                blockData[i][2] = 0;
     }
 
     private void ifT(){
         for (int i = 0; i < 4; i++)
                 if(getTX(i) != 0)
-                    pieceData[i][2] = 1;
+                    blockData[i][2] = 1;
     }
 
     private void IfHasWIngs(){
         for (int i = 0; i < 4; i++)
             if(getTX(i) != 0)
-                pieceData[i][2] = 1;
+                blockData[i][2] = 1;
     }
 
     public void ifStackedSides(int bottom){
         for (int i = 0; i < 4; i++)
             if (getTX(bottom) != getTX(i) && getTY(i) == 0)
-                pieceData[i][2] = 1;
+                blockData[i][2] = 1;
     }
 
     public void newPiece(int x, int y) {
         Random rand = new Random();
         switch(rand.nextInt(7)){
             case 0: //I
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;20;240;240m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;20;240;240m \033[0m");
+                blockData = new int[][] {
                     {-1, 0, 0},
                     {0, 0, 0},
                     {1, 0, 0},
@@ -186,10 +199,10 @@ class Piece {
                 };
                 break;
             case 1: // Cube
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;234;236;35m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;234;236;35m \033[0m");
+                blockData = new int[][] {
                     {-1, 0, 0},
                     {0, 0, 0},
                     {-1, 1, 0},
@@ -198,10 +211,10 @@ class Piece {
                 };
                 break;
             case 2: // T
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;180;0;158m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;180;0;158m \033[0m");
+                blockData = new int[][] {
                     {-1, 0, 0},
                     {0, 0, 0},
                     {1, 0, 0},
@@ -210,10 +223,10 @@ class Piece {
                 };
                 break;
             case 3: // L
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;252;127;0m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;252;127;0m \033[0m");
+                blockData = new int[][] {
                     {-1, 0, 0},
                     {0, 0, 0},
                     {1, 0, 0},
@@ -222,10 +235,10 @@ class Piece {
                 };
                 break;
             case 4: // J
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;88;51;255m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;88;51;255m \033[0m");
+                blockData = new int[][] {
                     {-1, -1, 0},
                     {-1, 0, 0},
                     {0, 0, 0},
@@ -235,10 +248,10 @@ class Piece {
                 break;
             
             case 5: // Z
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;252;57;31m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;252;57;31m \033[0m");
+                blockData = new int[][] {
                     {-1, 0, 0},
                     {0, 0, 0},
                     {0, 1, 0},
@@ -247,10 +260,10 @@ class Piece {
                 };
                 break;
             case 6: // S
-                pieces = new Tetrominoe [4];
+                blocks = new Block [4];
                     for (int i = 0; i < 4; i++)
-                        pieces[i] = new Tetrominoe("\033[48;2;49;231;34m \033[0m");
-                pieceData = new int[][] {
+                        blocks[i] = new Block("\033[48;2;49;231;34m \033[0m");
+                blockData = new int[][] {
                     {0, 0, 0},
                     {1, 0, 0},
                     {-1, 1, 0},
