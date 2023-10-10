@@ -165,9 +165,9 @@ public class Container {
 
     private boolean checkBottomCollision(){
         for (int i = 0; i < 4; i++){
-            if (pieces[1].checkBottom(i) && curRow.prev == null)
-                return true;
             Node curP = navigate(pieces[1].getTY(i), curRow);
+            if (pieces[1].checkBottom(i) && curP.prev == null)
+                return true;
             if (curRow.prev != null && pieces[1].checkBottom(i) && curP.prev.row[pieces[1].getX() + pieces[1].getTX(i)] != null)
                 return true;
         }
