@@ -44,15 +44,15 @@ public class Container {
     
     private void clearDisplay(){
         for (int i = 0; i < 4; i++){
-            Node curP = navigate(pieces[1].getTY(i), curRow);
-            curP.row[pieces[1].getX() + pieces[1].getTX(i)] = null;
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
+            curP.row[pieces[1].getCol() + pieces[1].getBCol(i)] = null;
         }
     }
 
     private void updateDisplay(){
         for (int i = 0; i < 4; i++){
-            Node curP = navigate(pieces[1].getTY(i), curRow);
-            curP.row[pieces[1].getX() + pieces[1].getTX(i)] = pieces[1].getTetrominoe(i);
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
+            curP.row[pieces[1].getCol() + pieces[1].getBCol(i)] = pieces[1].getBlock(i);
         }
     }
 
@@ -67,10 +67,9 @@ public class Container {
             pieceHeld = true;
         }
         else {
-            int [] coord = new int [] {pieces[1].getX(), pieces[1].getY()};
+            int column = pieces[1].getCol();
             Piece temp = pieces[0];
-            pieces[0].setX(coord[0]);
-            pieces[0].setY(coord[1]);
+            pieces[0].setCol(column);
             pieces[0] = pieces[1];
             clearDisplay();
             pieces[1].setRotation(1);
@@ -110,7 +109,6 @@ public class Container {
         else {
             clearDisplay();
             curRow = curRow.prev;
-            pieces[1].moveDown();
             updateDisplay();
         }
     }
@@ -118,18 +116,24 @@ public class Container {
     public void rotate(){
         clearDisplay();
         pieces[1].rotate();
-        while (checkCollisions()){
-            pieces[1].rotate();
+        for (int i = 0; i < 4; i++){
+            if (pieces[1].getCol() + pieces[1].getBCol(i) < 0)
+                pieces[1].moveRight();
+            if (pieces[1].getCol() + pieces[1].getBCol(i) > 9)
+                pieces[1].moveLeft();
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
+            if (curP == null)
+                curRow = head.next;
         }
         updateDisplay();
     }
 
     private boolean checkLeftCollisionAfterMove(){
         for (int i = 0; i < 4; i++){
-            if (pieces[1].getX() + pieces[1].getTX(i) < 0)
+            if (pieces[1].getCol() + pieces[1].getBCol(i) < 0)
                 return true;
-            Node curP = navigate(pieces[1].getTY(i), curRow);
-            if (curP.row[pieces[1].getX() + pieces[1].getTX(i)] != null)
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
+            if (curP.row[pieces[1].getCol() + pieces[1].getBCol(i)] != null)
                 return true;
         }
         return false;
@@ -137,27 +141,10 @@ public class Container {
 
     private boolean checkRightCollisionAfterMove(){
         for (int i = 0; i < 4; i++){
-            if (pieces[1].getX() + pieces[1].getTX(i) > 9)
+            if (pieces[1].getCol() + pieces[1].getBCol(i) > 9)
                 return true;
-            Node curP = navigate(pieces[1].getTY(i), curRow);
-            if (curP.row[pieces[1].getX() + pieces[1].getTX(i)] != null)
-                return true;
-        }
-        return false;
-    }
-
-    private boolean checkCollisions(){
-        for (int i = 0; i < 4; i++){
-            if (pieces[1].getX() + pieces[1].getTX(i) < 0)
-                pieces[1].moveRight();
-            if (pieces[1].getX() + pieces[1].getTX(i) > 9)
-                pieces[1].moveLeft();
-            while (pieces[1].getY() + pieces[1].getTY(i) > 21){
-                pieces[1].moveUp();
-                curRow = curRow.next;
-            }
-            Node curP = navigate(pieces[1].getTY(i), curRow);
-            if (pieces[1].checkBottom(i) && curP.row[pieces[1].getX() + pieces[1].getTX(i)] != null)
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
+            if (curP.row[pieces[1].getCol() + pieces[1].getBCol(i)] != null)
                 return true;
         }
         return false;
@@ -165,10 +152,10 @@ public class Container {
 
     private boolean checkBottomCollision(){
         for (int i = 0; i < 4; i++){
-            Node curP = navigate(pieces[1].getTY(i), curRow);
+            Node curP = navigate(pieces[1].getBRow(i), curRow);
             if (pieces[1].checkBottom(i) && curP.prev == null)
                 return true;
-            if (curRow.prev != null && pieces[1].checkBottom(i) && curP.prev.row[pieces[1].getX() + pieces[1].getTX(i)] != null)
+            if (curRow.prev != null && pieces[1].checkBottom(i) && curP.prev.row[pieces[1].getCol() + pieces[1].getBCol(i)] != null)
                 return true;
         }
         return false;
@@ -206,11 +193,11 @@ public class Container {
     private void sideScreenUpdate(){
         piecesData = new Block[6][4];
         for (int i = 0; i < 4; i++){
-            piecesData[pieces[2].getTY(i) + 1][pieces[2].getTX(i) + 1] = pieces[2].getTetrominoe(i);
+            piecesData[pieces[2].getBRow(i) + 1][pieces[2].getBCol(i) + 1] = pieces[2].getBlock(i);
         }
         if (pieces[0] != null)
             for (int i = 0; i < 4; i++){
-                piecesData[pieces[0].getTY(i) + 4][pieces[0].getTX(i) + 1] = pieces[0].getTetrominoe(i);
+                piecesData[pieces[0].getBRow(i) + 4][pieces[0].getBCol(i) + 1] = pieces[0].getBlock(i);
             }
     }
 

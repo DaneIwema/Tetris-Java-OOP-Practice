@@ -6,6 +6,8 @@ class Piece {
 
     private Block [] blocks;
 
+    int [] pieceData;
+
     int [][] blockData;
     //[0]-[3]([0]-[1]) block coordinates
     //[0]-[3]([2]) Is bottom piece or not
@@ -17,20 +19,12 @@ class Piece {
         newPiece(2, 6);
     }
 
-    public int getX(){
+    public int getCol(){
         return blockData[4][1];
     }
 
-    public int getY(){
-        return blockData[4][0];
-    }
-
-    public void setX(int col){
+    public void setCol(int col){
         blockData[4][1] = col;
-    }
-    
-    public void setY(int row){
-        blockData[4][0] = row;
     }
 
     public int getRotation(){
@@ -43,15 +37,15 @@ class Piece {
         blockData[4][3] = target;
     }
 
-    public int getTX(int slot){
+    public int getBCol(int slot){
         return blockData[slot][0];
     }
 
-    public int getTY(int slot){
+    public int getBRow(int slot){
         return blockData[slot][1];
     }
 
-    public Block getTetrominoe(int slot){
+    public Block getBlock(int slot){
         return blocks[slot];
     }
 
@@ -61,14 +55,6 @@ class Piece {
 
     public void moveLeft(){
         blockData[4][1] = blockData[4][1] - 1;
-    }
-
-    public void moveDown(){
-        blockData[4][0] = blockData[4][0] + 1;
-    }
-
-    public void moveUp(){
-        blockData[4][0] = blockData[4][0] - 1;
     }
 
     public void rotate(){
@@ -87,8 +73,8 @@ class Piece {
     }
     
     private boolean checkBottomMost(int slot){
-        if (Math.max(Math.max(getTY(0), getTY(1)), 
-            Math.max(getTY(2), getTY(3))) == getTY(slot))
+        if (Math.max(Math.max(getBRow(0), getBRow(1)), 
+            Math.max(getBRow(2), getBRow(3))) == getBRow(slot))
             return true;
         return false;
     }
@@ -167,19 +153,19 @@ class Piece {
 
     private void ifT(){
         for (int i = 0; i < 4; i++)
-                if(getTX(i) != 0)
+                if(getBCol(i) != 0)
                     blockData[i][2] = 1;
     }
 
     private void IfHasWIngs(){
         for (int i = 0; i < 4; i++)
-            if(getTX(i) != 0)
+            if(getBCol(i) != 0)
                 blockData[i][2] = 1;
     }
 
     public void ifStackedSides(int bottom){
         for (int i = 0; i < 4; i++)
-            if (getTX(bottom) != getTX(i) && getTY(i) == 0)
+            if (getBCol(bottom) != getBCol(i) && getBRow(i) == 0)
                 blockData[i][2] = 1;
     }
 
