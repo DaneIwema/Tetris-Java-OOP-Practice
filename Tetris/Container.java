@@ -5,9 +5,10 @@ public class Container {
     Node tail;
     Node curRow;
     Piece [] pieces;
-    Block [][] piecesData;
+    Block [][] piecesData;//for the side screen coordinates
     int rowsCleared;
     boolean pieceHeld;
+    int linesCleared;
 
     public class Node {
         protected Node next; 
@@ -188,6 +189,7 @@ public class Container {
         Node curP = new Node(tail);
         tail.next = curP;
         tail = curP;
+        linesCleared++;
     }
 
     private void sideScreenUpdate(){
@@ -303,21 +305,25 @@ public class Container {
                     str.append(" \033[48;2;129;131;131m********\033[0m");
                     break;
                 case 12:
-                    str.append(" Controls:");
-                    break;
-                case 13:
-                    str.append(" A: Move Left");
+                    str.append("lines Cleared: ");
+                    str.append(linesCleared);
                     break;
                 case 14:
-                    str.append(" D: Move Right");
+                    str.append(" Controls:");
                     break;
                 case 15:
-                    str.append(" S: Move Down");
+                    str.append(" A: Move Left");
                     break;
                 case 16:
-                    str.append(" W: Rotate");
+                    str.append(" D: Move Right");
                     break;
                 case 17:
+                    str.append(" S: Move Down");
+                    break;
+                case 18:
+                    str.append(" W: Rotate");
+                    break;
+                case 19:
                     str.append(" Space: Save/Swap");
                     break;
             }
