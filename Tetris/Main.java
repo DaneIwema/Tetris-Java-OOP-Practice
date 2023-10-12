@@ -2,12 +2,21 @@ package Tetris;
 
 import java.io.IOException;
 
-public class Main {
+public class Main extends Thread{
+
+    public static Container display;
+    public static WindowsRawMode window;
+
     public static void main(String[] args) throws IOException{
-        WindowsRawMode window = new WindowsRawMode();
+        window = new WindowsRawMode();
         window.enableRawMode();
-        Container display = new Container();
-        System.out.print(display.toString());
+        display = new Container();
+        Main blockFalling = new Main();
+        Main gameloop = new Main();
+        gameloop.setName("1");
+        blockFalling.setName("2");
+        gameloop.start();
+        blockFalling.start();
         while (true){
             int key = System.in.read();
             switch (key){
@@ -27,7 +36,25 @@ public class Main {
                     display.savePiece();
                     break;
             }
-            System.out.print(display.toString());
         }
+    }
+
+    @Override
+    public void run() {
+        if (Thread.currentThread().getName() == "1")
+            while (true){
+                System.out.print(display.toString());
+            }
+        else if (Thread.currentThread().getName() == "2")
+            while (true){
+                
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                display.moveDown();
+            }
+        
     }
 }
