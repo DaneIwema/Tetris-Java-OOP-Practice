@@ -1,17 +1,16 @@
 package Tetris;
 
 public class Container{
-    Node head;
-    Node tail;
-    Node curRow;
-    Piece [] pieces;
-    Block [][] piecesData;//for the side screen coordinates
-    int rowsCleared;
-    boolean pieceHeld;
+    private Node head;
+    private Node tail;
+    private Node curRow;
+    private Piece [] pieces;
+    private Block [][] piecesData;//for the side screen coordinate
     int [] playerData;
+    public boolean gameOver;
     //[0] lines cleared
     //[1] new turn or not
-    //[2] game over if 1
+    //[2] piece held or not
 
     public class Node {
         protected Node next; 
@@ -34,8 +33,9 @@ public class Container{
         tail = curP;
         pieces = new Piece [] {null, new Piece(), new Piece()};
         curRow = tail.prev.prev;
-        pieceHeld = false;
         playerData = new int [3];
+        playerData[2] = 0;
+        gameOver = true;
         updateDisplay();
     }
 
@@ -62,14 +62,14 @@ public class Container{
     }
 
     public void savePiece(){
-        if(!pieceHeld && playerData[1] == 0){
+        if(playerData[2] == 0 && playerData[1] == 0){
             clearDisplay();
             pieces[1].setRotation(1);
             pieces[0] = pieces[1];
             pieces[1] = pieces[2];
             pieces[2] = new Piece();
             curRow = tail.prev.prev;
-            pieceHeld = true;
+            playerData[2] = 1;
             updateDisplay();
         }
         else if (playerData[1] == 0){
@@ -106,7 +106,7 @@ public class Container{
     public void moveDown(){
         if (checkBottomCollision()){
             if (curRow == tail.prev.prev)
-                playerData[2] = 1;
+                gameOver = false;
             else {
                 curRow = tail.prev.prev;
                 pieces[1] = pieces[2];
@@ -216,138 +216,131 @@ public class Container{
         sideScreenUpdate();
         int countRow = 0;
         StringBuilder str = new StringBuilder();
-        if (playerData[2] == 1){
-            str.append("\033[2J");
-            str.append("\033[H");
-            str.append("Game Over");
-        }
-        else{
-            str.append("\033[2J");
-            str.append("\033[H");
-            Node curP = tail.prev.prev;
-            while (curP != null){
-                str.append("\033[48;2;129;131;131m*\033[0m");
-                for (int i = 0; i < 10; i++){
-                    if (curP.row[i] == null)
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                    else
-                        str.append(curP.row[i].getColor());
-                }
-                str.append("\033[48;2;129;131;131m*\033[0m");
-                switch(countRow){
-                    case 0:
-                        str.append(" \033[48;2;129;131;131m**NEXT**\033[0m");
-                        break;
-                    case 1:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[0][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[0][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 2:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[1][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[1][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 3:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[2][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[2][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 4:
-                        str.append(" \033[48;2;129;131;131m********\033[0m");
-                        break;
-                    case 6:
-                        str.append(" \033[48;2;129;131;131m**HELD**\033[0m");
-                        break;
-                    case 7:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[3][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[3][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 8:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[4][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[4][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 9:
-                        str.append(" \033[48;2;129;131;131m*\033[0m");
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        for (int i = 0; i < 4; i++){
-                            if (piecesData[5][i] == null)
-                                str.append("\033[48;2;203;204;205m \033[0m");
-                            else
-                                str.append(piecesData[5][i].getColor());
-                        }
-                        str.append("\033[48;2;203;204;205m \033[0m");
-                        str.append("\033[48;2;129;131;131m*\033[0m");
-                        break;
-                    case 10:
-                        str.append(" \033[48;2;129;131;131m********\033[0m");
-                        break;
-                    case 12:
-                        str.append("lines Cleared: ");
-                        str.append(playerData[0]);
-                        break;
-                    case 14:
-                        str.append(" Controls:");
-                        break;
-                    case 15:
-                        str.append(" A: Move Left");
-                        break;
-                    case 16:
-                        str.append(" D: Move Right");
-                        break;
-                    case 17:
-                        str.append(" S: Move Down");
-                        break;
-                    case 18:
-                        str.append(" W: Rotate");
-                        break;
-                    case 19:
-                        str.append(" Space: Save/Swap");
-                        break;
-                }
-                str.append("\n");
-                curP = curP.prev;
-                countRow++;
+        str.append("\033[2J");
+        str.append("\033[H");
+        Node curP = tail.prev.prev;
+        while (curP != null){
+            str.append("\033[48;2;129;131;131m*\033[0m");
+            for (int i = 0; i < 10; i++){
+                if (curP.row[i] == null)
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                else
+                    str.append(curP.row[i].getColor());
             }
-            str.append("\033[48;2;129;131;131m************\033[0m");
+            str.append("\033[48;2;129;131;131m*\033[0m");
+            switch(countRow){
+                case 0:
+                    str.append(" \033[48;2;129;131;131m**NEXT**\033[0m");
+                    break;
+                case 1:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[0][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[0][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 2:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[1][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[1][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 3:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[2][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[2][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 4:
+                    str.append(" \033[48;2;129;131;131m********\033[0m");
+                    break;
+                case 6:
+                    str.append(" \033[48;2;129;131;131m**HELD**\033[0m");
+                    break;
+                case 7:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[3][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[3][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 8:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[4][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[4][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 9:
+                    str.append(" \033[48;2;129;131;131m*\033[0m");
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    for (int i = 0; i < 4; i++){
+                        if (piecesData[5][i] == null)
+                            str.append("\033[48;2;203;204;205m \033[0m");
+                        else
+                            str.append(piecesData[5][i].getColor());
+                    }
+                    str.append("\033[48;2;203;204;205m \033[0m");
+                    str.append("\033[48;2;129;131;131m*\033[0m");
+                    break;
+                case 10:
+                    str.append(" \033[48;2;129;131;131m********\033[0m");
+                    break;
+                case 12:
+                    str.append("lines Cleared: ");
+                    str.append(playerData[0]);
+                    break;
+                case 14:
+                    str.append(" Controls:");
+                    break;
+                case 15:
+                    str.append(" A: Move Left");
+                    break;
+                case 16:
+                    str.append(" D: Move Right");
+                    break;
+                case 17:
+                    str.append(" S: Move Down");
+                    break;
+                case 18:
+                    str.append(" W: Rotate");
+                    break;
+                case 19:
+                    str.append(" Space: Save/Swap");
+                    break;
+            }
+            str.append("\n");
+            curP = curP.prev;
+            countRow++;
         }
+        str.append("\033[48;2;129;131;131m************\033[0m");
         return str.toString();
     }
 }
