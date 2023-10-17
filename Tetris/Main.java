@@ -55,7 +55,6 @@ public class Main extends Thread{
             }
         else if (Thread.currentThread().getName() == "2")
             while (display.gameOver){
-                
                 try {
                     Thread.sleep(400);
                 } catch (InterruptedException e) {
