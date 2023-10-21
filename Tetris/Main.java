@@ -4,13 +4,11 @@ import java.io.IOException;
 
 public class Main extends Thread{
 
-    public static Container display;
-    public static WindowsRawMode window;
+    public static Container display = new Container();
+    public static WindowsRawMode window = new WindowsRawMode();
 
     public static void main(String[] args) throws IOException{
-        window = new WindowsRawMode();
         window.enableRawMode();
-        display = new Container();
         Main blockFalling = new Main();
         Main gameloop = new Main();
         gameloop.setName("1");
